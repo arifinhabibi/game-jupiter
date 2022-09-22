@@ -1,0 +1,12 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#canvas {
+    height: 670px;
+    width: 1366px;
+    border: solid 1px #000;
+    background-image: linear-gradient(rgb(167, 3, 167), rgb(0, 0, 53));
+}

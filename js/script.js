@@ -6,7 +6,7 @@ canvas.height = 1080
 
 class Player{
   constructor({x,y, width, height}){
-    this.hp = 3
+    this.hp = 2
     this.x = x
     this.y = y
     this.width = width

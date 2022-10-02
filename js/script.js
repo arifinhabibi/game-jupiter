@@ -1,131 +1,7 @@
-const canvas = document.getElementById('canvas')
-const c = canvas.getContext('2d')
 
-canvas.width = 1980
-canvas.height = 1080
+// state
+let gameState = 'starting'
 
-class Player{
-  constructor({x,y, width, height}){
-    this.hp = 3
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
-    this.imageIdle = new Image()
-    this.imageAttack = new Image()
-    this.imageHit = new Image()
-    this.imageIdle.src = "./assets/player.png"
-    this.imageAttack.src = "./assets/player_attack.png"
-    this.imageHit.src = "./assets/player_hit.png"
-    this.image = this.imageIdle
-    this.isAttacking = false
-    this.isFacingRight = false
-    this.isHit = false
-  }
-
-  draw(){
-    if(this.isFacingRight){
-      flip(this.x, this.y, this.width, 40)
-    }
-    drawRotatedImage(this.image, this.x, this.y, this.width, this.height, 40)
-    c.restore()
-  }
-
-  attack(){
-    this.isAttacking = true
-    this.image = this.imageAttack
-    setTimeout(()=>{this.isAttacking = false; this.image = this.imageIdle}, 200);
-  }
-
-  hit(){
-    this.image = this.imageHit
-    if(!this.isHit){
-      this.hp -= 1
-    }
-    this.isHit = true
-    setTimeout(()=>{this.image = this.imageIdle, this.isHit = false}, 1000);
-  }
-
-}
-
-class Ball{
-  constructor({x,y, width, height}){
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
-    this.image = new Image()
-    this.image.src = "./assets/ball.png"
-    this.rotation = 0.1
-    this.reversed = 1
-    this.hit = false
-  }
-
-  draw(){
-    this.x = rotate(1980/2,1080/2,1400, 200, this.rotation).x
-    this.y = rotate(1980/2,1080/2,1400, 200, this.rotation).y
-    c.drawImage(this.image, this.x, this.y, this.width, this.height)
-    this.rotation += 1 * this.reversed
-    if(
-      this.x + 200 >= player.x && 
-      this.x <= player.x + 200 && 
-      this.y + this.height >= player.y && 
-      this.y + this.height <= player.y + 200 &&
-        player.isAttacking
-    ){
-      if(!this.hit){
-        this.hit = true
-        this.reversed = this.reversed *-1
-        setTimeout(()=>{this.hit = false}, 1000)
-      }
-    }else if(
-      this.x + 200 >= player.x && 
-      this.x <= player.x + 200 && 
-      this.y + this.height >= player.y && 
-      this.y + this.height <= player.y + 200 &&
-        !player.isAttacking
-    ){
-      player.hit()
-
-    }
-
-
-  }
-
-}
-
-function drawRotatedImage(image, x, y, w, h, degrees){
-  c.save();
-  c.translate(x+w/2, y+h/2);
-  c.rotate(degrees*Math.PI/180.0);
-  c.translate(-x-w/2, -y-h/2);
-  c.drawImage(image, x, y, w, h);
-  c.restore();
-}
-
-function flip(x, y, w, deg){
-  const rad =  deg*Math.PI/180.0;
-  c.save()
-  c.translate(x + w/2, y+ w/2);
-  c.scale(-1, 1);
-  c.rotate(-rad - rad);
-  c.translate(-(x+ w/2), -(y+w /2));
-}
-
-function rotate(cx, cy, x, y, angle,anticlock_wise = false) {
-    if(angle == 0){
-        return {x:parseFloat(x), y:parseFloat(y)};
-    }if(anticlock_wise){
-        var radians = (Math.PI / 180) * angle;
-    }else{
-        var radians = (Math.PI / -180) * angle;
-    }
-    var cos = Math.cos(radians);
-    var sin = Math.sin(radians);
-    var nx = (cos * (x - cx)) + (sin * (y - cy)) + cx;
-    var ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-    return {x:nx, y:ny};
- }
 
 
 //set jupiter
@@ -135,16 +11,21 @@ jupiter.src = "./assets/jupiter.png"
 //set player
 let player = new Player({x: 1200, y:80, width: 200, height: 200})
 
-let ball = new Ball({x: 1200, y:200, width: 50, height: 50})
+// bot
+let bot1 = new Both({x: 550, y:80, width: 200, height: 200, IdleImage: './assets/bot1.png', attackImage: './assets/bot1_attack.png', hitImage: './assets/bot1_hit.png', rotation: -40, dodgeX: 100, dodgeY: 100, textName: 'Both 1', infoX: 40, infoY: 40})
+let bot2 = new Both({x: 550, y:800, width: 200, height: 200, IdleImage: './assets/bot2.png', attackImage: './assets/bot2_attack.png', hitImage: './assets/bot2_hit.png', rotation: -130 , dodgeX: 100, dodgeY: -100, textName: 'Both 2', infoX: 40, infoY: 800})
+let bot3 = new Both({x: 1270, y:750, width: 200, height: 200, IdleImage: './assets/bot3.png', attackImage: './assets/bot3_attack.png', hitImage: './assets/bot3_hit.png', rotation: 130, dodgeX: -100, dodgeY: -70, textName: 'Both 3', infoX: 1550, infoY: 800})
+
+let ball = new Ball({x: 700, y:150, width: 50, height: 50})
 
 const update = ()=>{
   c.clearRect(0,0,canvas.width, canvas.height)
-
-  if(player.hp >= 0){
-    player.draw()
-  }
+  player.update()
+  bot1.update()
+  bot2.update()
+  bot3.update()
   ball.draw()
-  c.drawImage(jupiter, 1980/2 - 800/2, 1080/2 - 800/2, 800, 800)
+  c.drawImage(jupiter, canvas.width/2 - 800/2, canvas.height/2 - 800/2, 800, 800)
 }
 
 setInterval(update, 8)
@@ -159,6 +40,11 @@ window.addEventListener("keydown", (e)=>{
   if(e.key == "a"){
     player.isFacingRight = false
   }
+
+  if (e.key == "s") {
+    player.dodge()
+  }
+
 })
 
 

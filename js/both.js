@@ -107,11 +107,17 @@ class Both{
         c.fillRect(this.infoX, this.infoY + 100, 400, 150)
         c.font = '40px serif'
         c.fillText(this.textName, this.infoX + 150, this.infoY + 60)
-
+        
         let space = 50
-        for(let i = 0; i < this.hp; i++ ){
-            c.drawImage(this.healthImage, this.infoX + space , this.infoY + 130, 80, 80)
-            space += 100
+        if (this.hp > 0) {
+            for(let i = 0; i < this.hp; i++ ){
+                c.drawImage(this.healthImage, this.infoX + space , this.infoY + 130, 80, 80)
+                space += 100
+            }
+        } else {
+            c.fillStyle = 'red'
+            c.font = '40px serif'
+            c.fillText('Died',this.infoX + 160, this.infoY + 190)
         }
 
         if(

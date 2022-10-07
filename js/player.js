@@ -16,6 +16,10 @@ class Player{
       this.isFacingRight = false
       this.isHit = false
       this.isDodging = false
+
+
+      this.healthImage = new Image()
+      this.healthImage.src = './assets/heart.png'
     }
   
     draw(){
@@ -58,28 +62,51 @@ class Player{
     update(){
         if (this.hp > 0) {
             this.draw()
-        }
-        if(
-            ball.x + ball.width >= this.x && 
-            ball.x <= this.x + this.width && 
-            ball.y + ball.height >= this.y && 
-            ball.y + ball.height <= this.y + this.width &&
-              this.isAttacking
-          ){
-            if(!ball.hit){
-              ball.hit = true
-              ball.reversed = ball.reversed *-1
-              setTimeout(()=>{ball.hit = false}, 1000)
+
+            if(
+              ball.x + ball.width >= this.x && 
+              ball.x <= this.x + this.width && 
+              ball.y + ball.height >= this.y && 
+              ball.y + ball.height <= this.y + this.width &&
+                this.isAttacking
+            ){
+              if(!ball.hit){
+                ball.hit = true
+                ball.reversed = ball.reversed *-1
+                setTimeout(()=>{ball.hit = false}, 1000)
+              }
+            }else if(
+              ball.x + ball.width >= this.x && 
+              ball.x <= this.x + this.width && 
+              ball.y + ball.height >= this.y && 
+              ball.y + ball.height <= this.y + this.width &&
+                !this.isAttacking
+            ){
+              this.hit()
             }
-          }else if(
-            ball.x + ball.width >= this.x && 
-            ball.x <= this.x + this.width && 
-            ball.y + ball.height >= this.y && 
-            ball.y + ball.height <= this.y + this.width &&
-              !this.isAttacking
-          ){
-            this.hit()
+        }
+        
+        c.fillStyle = 'orange'
+        c.fillRect(1550, 40, 400, 100)
+        c.fillStyle = 'white'
+        c.fillRect(1550, 40 + 100, 400, 150)
+        c.font = '40px serif'
+        c.fillText('dudung', 1550 + 150, 40 + 60)
+
+        let space = 50
+        
+        if (this.hp > 0) {
+          for(let i = 0; i < this.hp; i++ ){
+              c.drawImage(this.healthImage, 1550 + space , 40 + 130, 80, 80)
+              space += 100
           }
+      } else {
+          c.fillStyle = 'red'
+          c.font = '40px serif'
+          c.fillText('Died',1550 + 160, 40 + 190)
+      }
+
+       
     }
   
   }

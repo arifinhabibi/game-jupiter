@@ -18,17 +18,23 @@ let bot3 = new Both({x: 1270, y:750, width: 200, height: 200, IdleImage: './asse
 
 let ball = new Ball({x: 700, y:150, width: 50, height: 50})
 
+
+
 const update = ()=>{
   c.clearRect(0,0,canvas.width, canvas.height)
+  
+  
   player.update()
   bot1.update()
   bot2.update()
   bot3.update()
   ball.draw()
   c.drawImage(jupiter, canvas.width/2 - 800/2, canvas.height/2 - 800/2, 800, 800)
+
 }
 
-setInterval(update, 8)
+
+setInterval(update, 10)
 
 window.addEventListener("keydown", (e)=>{
   if(e.key == " "){
@@ -46,6 +52,10 @@ window.addEventListener("keydown", (e)=>{
   }
 
 })
+
+
+
+
 
 
 
